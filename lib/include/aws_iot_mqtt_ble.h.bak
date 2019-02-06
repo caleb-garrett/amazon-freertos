@@ -70,19 +70,14 @@
 /**
  * @brief Characteristics used by MQTT Service.
  */
-
-typedef enum {
-  eMQTTBLE_SERVICE,
-  eMQTTBLE_CHAR_CONTROL,                //!< eMQTTBLEControl Characteristic to enable/disable transferring data over MQTT service
-  eMQTTBLE_CHAR_TX_MESG,                //!< eMQTTBLETXMessage Characteristic to send notification containing a message to MQTT broker
-  eMQTTBLE_CHAR_DESCR_TX_MESG,          //!< eMQTTBLE_CHAR_DESCR_TX_MESG Characteristic descriptor
-  eMQTTBLE_CHAR_RX_MESG,                //!< eMQTTBLERXMessage Characteristic to receive a message from MQTT broker
-  eMQTTBLE_TX_LARGE_MESG,               //!< eMQTTBLETXLargeMessage Characteristic to send a large message (> BLE MTU Size) to MQTT broker
-  eMQTTBLE_CHAR_DESCR_TX_LARGE_MESG,    //!< eMQTTBLE_CHAR_DESCR_TX_LARGE_MESG Characteristic descripto
-  eMQTTBLE_RX_LARGE,                    //!  eMQTTBLERXLargeMessage Characteristic to receive large message (> BLE MTU Size) from MQTT broke
-  eMQTTBLE_NUMBER                       //!< eMQTTBLEAttributes_t Number of attributes in eMQTT service
-} MQTTBLEAttributes_t;
-
+typedef enum
+{
+	eMQTTBLEControl = 0,    //!< eMQTTBLEControl Characteristic to enable/disable transferring data over MQTT service
+	eMQTTBLETXMessage,      //!< eMQTTBLETXMessage Characteristic to send notification containing a message to MQTT broker
+	eMQTTBLERXMessage,      //!< eMQTTBLERXMessage Characteristic to receive a message from MQTT broker
+	eMQTTBLETXLargeMessage, //!< eMQTTBLETXLargeMessage Characteristic to send a large message (> BLE MTU Size) to MQTT broker
+	eMQTTBLERXLargeMessage  //!< eMQTTBLERXLargeMessage Characteristic to receive large message (> BLE MTU Size) from MQTT broker
+} MQTTBLECharacteristic_t;
 
 /**
  * Descriptors used by MQTT service
@@ -163,14 +158,10 @@ typedef struct MqttBLEService
 	uint16_t usDescrVal[ mqttBLENUM_CHAR_DESCRS ];
 	uint16_t usBLEConnId;
         bool bIsInit;
+	bool bIsEnabled;
 	MqttBLEConnection_t xConnection;
 } MqttBLEService_t;
 
-
-/**
- * @brief Number of MQTT Proxy service instances to run.
- */
-#define mqttBLEMAX_SVC_INSTANCES                ( 1 )
 
 #define IS_SUCCESS( status )			( status == eBTStatusSuccess )
 

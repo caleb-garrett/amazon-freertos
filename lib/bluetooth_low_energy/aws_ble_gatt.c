@@ -592,7 +592,7 @@ BTStatus_t prvCreateAttributes(BLEService_t * pxService)
                 /* Create Service. Start handle is 0 so the number of handle is usEndHandle + 1.
                  * The real handle is assigned in the callback of that call.*/
                 xStatus = xBTInterface.pxGattServerInterface->pxAddService( xBTInterface.ucServerIf,
-                                                                  &pxService->pxBLEAttributes[0].xSrvcId,
+                                                                  pxService->x  d,
                                                                   pxService->xNumberOfAttributes );
            
                  break;

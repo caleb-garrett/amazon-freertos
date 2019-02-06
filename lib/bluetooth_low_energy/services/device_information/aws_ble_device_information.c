@@ -90,25 +90,27 @@ typedef enum {
   bledeviceinfoATTR_NUMBER
 } bledeviceinfoAttr_t;
 
-static uint16_t pusHandlesBuffer[bledeviceinfoATTR_NUMBER];
+static uint16_t usHandlesBuffer[bledeviceinfoATTR_NUMBER];
 
-static const BLEService_t xDeviceInformationService = 
-{
-  .xNumberOfAttributes = bledeviceinfoATTR_NUMBER,
-  .pusHandlesBuffer = pusHandlesBuffer,
-  .pxBLEAttributes = 
-  {
-     {    
-          .xAttributeType = eBTDbPrimaryService,
-          .xSrvcId = 
-          {
+static  const BTGattSrvcId_t xServiceCopy =  {
             .xId = 
             {
                 .xUuid = xDeviceInfoSvcUUID,
                 .ucInstId  = 0
             },
             .xServiceType = eBTServiceTypePrimary
-         }
+         };
+static const 
+
+static const BLEService_t xDeviceInformationService = 
+{
+  .xNumberOfAttributes = bledeviceinfoATTR_NUMBER,
+  .xId = 0,
+  .pusHandlesBuffer = usHandlesBuffer,
+  .pxBLEAttributes = 
+  {
+     {    
+          xDeviceInfoSvcUUID
      },
      {
          .xAttributeType = eBTDbCharacteristic,
@@ -239,33 +241,34 @@ BaseType_t AFRDeviceInfoSvc_Init( void )
     BaseType_t xResult = pdFAIL;
     BLEEventsCallbacks_t xCallback;
 
-      xStatus = BLE_CreateService( (BLEService_t *)&xDeviceInformationService, (BLEAttributeEventCallback_t *)pxCallBackArray );
-      if(xStatus == eBTStatusSuccess)
-      {
-          xResult = pdPASS;
-      }
+    /* Select the handle buffer. */
+    xStatus = BLE_CreateService( (BLEService_t *)&xDeviceInformationService, (BLEAttributeEventCallback_t *)pxCallBackArray );
+    if(xStatus == eBTStatusSuccess)
+    {
+        xResult = pdPASS;
+    }
 
-      if( xResult == pdPASS )
-      {
-          xCallback.pxMtuChangedCb = vMTUChangedCallback;
+    if( xResult == pdPASS )
+    {
+        xCallback.pxMtuChangedCb = vMTUChangedCallback;
 
-          if( BLE_RegisterEventCb( eBLEMtuChanged, xCallback ) != eBTStatusSuccess )
-          {
-              xResult = pdFALSE;
-          }
-      }
+        if( BLE_RegisterEventCb( eBLEMtuChanged, xCallback ) != eBTStatusSuccess )
+        {
+            xResult = pdFALSE;
+        }
+    }
 
-      if( xResult == pdPASS )
-      {
-              xCallback.pxConnectionCb = vConnectionCallback;
+    if( xResult == pdPASS )
+    {
+            xCallback.pxConnectionCb = vConnectionCallback;
 
-              if( BLE_RegisterEventCb( eBLEConnection, xCallback ) != eBTStatusSuccess )
-              {
-                      xResult = pdFAIL;
-              }
-      }
+            if( BLE_RegisterEventCb( eBLEConnection, xCallback ) != eBTStatusSuccess )
+            {
+                    xResult = pdFAIL;
+            }
+    }
 
-    return xResult;
+  return xResult;
 }
 
 /*-----------------------------------------------------------*/
@@ -439,7 +442,7 @@ static void vMTUChangedCallback( uint16_t usConnId,
         xService.usBLEMtu = usMtu;
         ulSendLen = snprintf( cMTUMsg, deviceInfoMTU_MSG_LEN, deviceInfoMTU_MSG_FORMAT, usMtu );
 
-        xAttrData.xHandle = xDeviceInformationService.pusHandlesBuffer[bledeviceinfoATTR_CHAR_MTU];
+        xAttrData.xHandle = xDeviceInformationService.ppusHandlesBuffer[0][bledeviceinfoATTR_CHAR_MTU];
         xAttrData.xUuid = xDeviceInformationService.pxBLEAttributes[bledeviceinfoATTR_CHAR_MTU].xCharacteristic.xUuid;
         xAttrData.pucData = ( uint8_t * ) cMTUMsg;
         xAttrData.xSize = ulSendLen;

@@ -191,31 +191,42 @@ typedef struct
 }BLEIncludedService_t;
 
 /**
+ * @brief  Structure describing a service UUID.
+ */
+typedef BTUuid_t BLEServiceUUID_t;
+
+/**
  * @brief Generic BLE attribute.
  */
 typedef struct 
 {
     BTDbAttributeType_t xAttributeType; /**< Type of attribute. */
     union
-    { 
-        BTGattSrvcId_t xSrvcId;                        /**< Service ID. */
-        BLECharacteristic_t xCharacteristic;           /**< Pointer to the relevant attribute structure. */
-        BLECharacteristicDescr_t xCharacteristicDescr; /**< Pointer to the relevant attribute structure. */
-        BLEIncludedService_t xIncludedService;         /**< Pointer to the relevant attribute structure. */
-        void * pxCharDeclaration;                         /**< Generic pointer for operations. */
+    {  
+        BLEServiceUUID_t xServiceUUID;                 /**< UUID of the service. */
+        BLECharacteristic_t xCharacteristic;           /**< Characteristic. */
+        BLECharacteristicDescr_t xCharacteristicDescr; /**< Descriptor. */
+        BLEIncludedService_t xIncludedService;         /**< Included service. */
     };
 }BLEAttribute_t;
 
 /**
  * @brief Structure describing a service.
  * Note, handles are allocated separatly so the attribute array can be allocated in ROM. 
- * pxHandlesBuffer needs to be equal to xNumberOfAttributes.
+ * pxHandlesBuffer has to dimensions: x and y [x][y] .
+ * x : Number of copies of the service
+ * y : needs to be equal to xNumberOfAttributes
+ *
+ * That structure has been constructed with the intent of putting most
+ * of it in ROM. The whole structure can be put in ROM. If copies are needed then only pxBLEAttributes can be constant.
+ * The fitst attribute is the UUID of the service.
  */
 struct BLEService
 {            
-    size_t xNumberOfAttributes;                /**< Instance ID. */
+    BTGattInstanceId_t xId;                   /**< Pointer to service handle */
+    size_t xNumberOfAttributes;                /**< Number of attributes. */
     uint16_t * pusHandlesBuffer;               /**< Array of handles, mapping to pxBLEAttributes. */
-    BLEAttribute_t pxBLEAttributes[];          /**< Array of attribute, can be allocated in ROM. */
+    BLEAttribute_t * pxBLEAttributes;          /**< Array of attribute, can be allocated in ROM. */
 } ;
 
 
