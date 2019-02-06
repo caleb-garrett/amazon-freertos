@@ -163,11 +163,6 @@ typedef struct MqttBLEService
 } MqttBLEService_t;
 
 
-/**
- * @brief Number of MQTT Proxy service instances to run.
- */
-#define mqttBLEMAX_SVC_INSTANCES                ( 1 )
-
 #define IS_SUCCESS( status )			( status == eBTStatusSuccess )
 
 

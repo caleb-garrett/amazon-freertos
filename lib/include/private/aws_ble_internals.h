@@ -56,18 +56,17 @@ typedef struct {
 
 typedef struct{
 	Link_t xServiceList;
-	BLEAttribute_t * pxAttributesPtr;
 	BLEService_t * pxService;
-	uint16_t usStartHandle;
-	uint16_t usEndHandle;
+        BLEAttributeEventCallback_t * pxEventsCallbacks;
+        uint16_t usEndHandle;
 }BLEServiceListElement_t;
 
 typedef enum{
 	eBLEHALEventServerRegisteredCb,
-	eBLEHALEventCharAddedCb,
-	eBLEHALEventSeviceAddedCb,
-	eBLEHALEventCharDescrAddedCb,
-	eBLEHALEventIncludedServiceAdded,
+	eBLEHALEventAttributeAddedCb,
+	eBLEHALEventServiceStartedCb,
+	eBLEHALEventServiceStoppedCb,
+	eBLEHALEventServiceDeletedCb,
 	eBLEHALEventRegisterBleAdapterCb,
 	eBLEHALEventAdapterPropertiesCb,
 	eBLENbHALEvents,
